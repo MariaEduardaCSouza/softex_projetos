@@ -55,7 +55,7 @@ ROOT_URLCONF = 'meuprojeto.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,3 +123,16 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+
+# Para onde os usuários são enviados se tentarem acessar uma página protegida sem login
+LOGIN_URL = 'login'
+
+# Para onde o usuário é redirecionado DEPOIS de fazer login
+LOGIN_REDIRECT_URL = 'home'
+
+# Para onde o usuário vai após fazer logout
+LOGOUT_REDIRECT_URL = 'login'
