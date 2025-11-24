@@ -1,32 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}Login{% endblock %}
-<<<<<<< HEAD
-=======
 
->>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
 {% block content %}
 <h2>Login</h2>
 
 {% if form.errors %}
-<<<<<<< HEAD
-<p style="color: red;">Seu usuário ou senha estão incorretos.</p>
-{% endif %}
-
-<form method="POST" action="{% url 'login' %}">
-=======
     <p style="color: red;">Seu usuário ou senha estão incorretos. Tente novamente.</p>
 {% endif %}
 
 <form method="POST">
->>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Entrar</button>
 </form>
 
-<<<<<<< HEAD
-<p><a href="{% url 'register' %}">Não tem conta? Cadastre-se</a></p>
-=======
 <p><a href="{% url 'register' %}">Não tem uma conta? Cadastre-se</a></p>
->>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
 {% endblock %}
