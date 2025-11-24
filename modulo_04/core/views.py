@@ -1,13 +1,57 @@
 from django.shortcuts import render, redirect, get_object_or_404
+<<<<<<< HEAD
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login as login_auth, logout as logout_auth
 from django.contrib.auth.decorators import login_required
 
+=======
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+>>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
 from .models import Tarefa
 from .forms import TarefaForm
 
 
+<<<<<<< HEAD
 # 🔐 HOME PROTEGIDA
+=======
+# --- CADASTRO DE USUÁRIO ---
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Login automático após cadastro
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'register.html', {'form': form})
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from .models import Tarefa
+from .forms import TarefaForm
+
+# --- CADASTRO DE USUÁRIO ---
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'register.html', {'form': form})
+
+
+# --- HOME ---
+>>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
 @login_required
 def home(request):
     if request.method == 'POST':
@@ -20,6 +64,7 @@ def home(request):
     else:
         form = TarefaForm()
 
+<<<<<<< HEAD
     tarefas = Tarefa.objects.filter(user=request.user).order_by('-criada_em')
 
     context = {
@@ -31,6 +76,18 @@ def home(request):
 
 
 # ✔ Concluir tarefa
+=======
+    tarefas = Tarefa.objects.filter(user=request.user)
+
+    return render(request, 'home.html', {
+        'form': form,
+        'tarefas': tarefas,
+        'nome_usuario': request.user.username,
+    })
+
+
+# --- CONCLUIR TAREFA ---
+>>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
 @login_required
 def concluir_tarefa(request, pk):
     tarefa = get_object_or_404(Tarefa, pk=pk, user=request.user)
@@ -40,13 +97,18 @@ def concluir_tarefa(request, pk):
         return redirect('home')
 
 
+<<<<<<< HEAD
 # ✔ Deletar tarefa
+=======
+# --- DELETAR TAREFA ---
+>>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
 @login_required
 def deletar_tarefa(request, pk):
     tarefa = get_object_or_404(Tarefa, pk=pk, user=request.user)
     if request.method == 'POST':
         tarefa.delete()
         return redirect('home')
+<<<<<<< HEAD
 
 
 # 👤 Tela de Cadastro (REGISTER)
@@ -82,3 +144,5 @@ def login(request):
 def logout(request):
     logout_auth(request)
     return redirect('login')
+=======
+>>>>>>> 8361ff563b2aebb49a2a88ef28b8370f15ab371f
