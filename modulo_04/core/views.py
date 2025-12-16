@@ -6,10 +6,12 @@ from django.contrib.auth.decorators import login_required
 from .models import Tarefa
 from .forms import TarefaForm
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import TarefaSerializer
 
-# =============================
-# 🏠 HOME (PROTEGIDA)
-# =============================
+
+
 @login_required
 def home(request):
     if request.method == 'POST':
@@ -32,10 +34,7 @@ def home(request):
     return render(request, 'home.html', context)
 
 
-# =============================
-# ✔ CONCLUIR TAREFA
-# =============================
-@login_required
+
 def concluir_tarefa(request, pk):
     tarefa = get_object_or_404(Tarefa, pk=pk, user=request.user)
     if request.method == 'POST':
@@ -44,9 +43,7 @@ def concluir_tarefa(request, pk):
         return redirect('home')
 
 
-# =============================
-# ❌ DELETAR TAREFA
-# =============================
+
 @login_required
 def deletar_tarefa(request, pk):
     tarefa = get_object_or_404(Tarefa, pk=pk, user=request.user)
@@ -55,15 +52,13 @@ def deletar_tarefa(request, pk):
         return redirect('home')
 
 
-# =============================
-# 👤 CADASTRO (REGISTER)
-# =============================
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login_auth(request, user)   # login automático
+            login_auth(request, user)
             return redirect('home')
     else:
         form = UserCreationForm()
@@ -71,13 +66,10 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
-# =============================
-# 🔐 LOGIN
-# =============================
+
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
-
         if form.is_valid():
             user = form.get_user()
             login_auth(request, user)
@@ -88,10 +80,36 @@ def login(request):
     return render(request, 'login.html', {'form': form})
 
 
-# =============================
-# 🚪 LOGOUT
-# =============================
+
 @login_required
 def logout(request):
     logout_auth(request)
     return redirect('login')
+
+
+
+class TarefaListAPIView(APIView):
+    def get(self, request):
+        user_id = request.query_params.get('user_id')
+
+        if user_id:
+            tarefas = Tarefa.objects.filter(user_id=user_id)
+        else:
+            tarefas = Tarefa.objects.all()
+
+        serializer = TarefaSerializer(tarefas, many=True)
+        return Response(serializer.data)
+
+
+
+class ContagemTarefasAPIView(APIView):
+    def get(self, request):
+        total = Tarefa.objects.count()
+        concluidas = Tarefa.objects.filter(concluida=True).count()
+        pendentes = total - concluidas
+
+        return Response({
+            'total': total,
+            'concluidas': concluidas,
+            'pendentes': pendentes
+        })
